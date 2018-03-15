@@ -4,6 +4,7 @@
  * Licensed under the MIT license
  */
 
+
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery')
 }
@@ -26,6 +27,29 @@ if (typeof jQuery === 'undefined') {
 
 
 +function ($) {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('../../../service-worker.js', {
+        scope: './'
+    }).then(function (registration) {
+        var serviceWorker;
+        if (registration.installing) {
+            serviceWorker = registration.installing;
+        } else if (registration.waiting) {
+            serviceWorker = registration.waiting;
+        } else if (registration.active) {
+            serviceWorker = registration.active;
+        }
+        if (serviceWorker) {
+            // logState(serviceWorker.state);
+            serviceWorker.addEventListener('statechange', function (e) {
+                // logState(e.target.state);
+            });
+        }
+    }).catch(function (error) {
+        // Something went wrong during registration. The service-worker.js file
+        // might be unavailable or contain a syntax error.
+    });
+}
   'use strict';
 
   // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)
